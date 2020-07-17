@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: business
+  name: business
+  namespace: rupchand
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: business
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: business
+    spec:
+      volumes:
+      - name: log-volume
+        emptyDir: {}
+      containers:
+      - image: rupchand1006/business:distributed
+        imagePullPolicy: Always
+        name: business
+        env:
+        - name: CATEGORY_URL
+          value: "http://category:8082/category"
+        volumeMounts:
+        - name: log-volume
+          mountPath: "/var/tmp/"
+        ports:
+        - containerPort: 8081
+        resources: {}
+status: {}
